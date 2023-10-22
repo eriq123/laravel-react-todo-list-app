@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { red } from "@mui/material/colors";
 import axios from "axios";
+import ListItem from "@/Components/ListItem";
 
 interface Todo {
     description: string;
@@ -35,29 +36,31 @@ export default function Welcome() {
                 </Typography>
                 <Divider />
                 <Stack sx={{ py: 2 }} gap={1.5}>
-                    {todoList.map((todo, index) => (
-                        <Stack
-                            key={`${todo}-${index}`}
-                            sx={{ px: 1, py: 3, border: `1px solid #eee` }}
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                        >
-                            <Typography variant="body1">
-                                {todo.description}
+                    {todoList.length === 0 ? (
+                        <ListItem>
+                            <Typography>
+                                You don't have anything todo for today.
                             </Typography>
-                            <IconButton
-                                sx={{
-                                    color: red["800"],
-                                    "&:hover": {
-                                        color: red["600"],
-                                    },
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        </Stack>
-                    ))}
+                        </ListItem>
+                    ) : (
+                        todoList.map((todo, index) => (
+                            <ListItem key={`${todo}-${index}`}>
+                                <Typography variant="body1" sx={{ px: 1.5 }}>
+                                    {todo.description}
+                                </Typography>
+                                <IconButton
+                                    sx={{
+                                        color: red["800"],
+                                        "&:hover": {
+                                            color: red["600"],
+                                        },
+                                    }}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItem>
+                        ))
+                    )}
                 </Stack>
             </Container>
             <style>{``}</style>
