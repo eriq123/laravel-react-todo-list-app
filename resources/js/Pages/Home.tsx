@@ -27,6 +27,18 @@ export default function Welcome() {
     const [todoList, setTodoList] = useState<Todo[]>([]);
     const [isAdding, setIsAdding] = useState(false);
 
+    const [draggedItem, setDraggedItem] = useState<Todo | null>(null);
+
+    const handleDragEnter = (_: any, index: number) => {
+        if (!draggedItem) return;
+
+        const updatedTodoList = [...todoList];
+        const draggedIndex = todoList.indexOf(draggedItem);
+        updatedTodoList.splice(draggedIndex, 1);
+        updatedTodoList.splice(index, 0, draggedItem);
+        setTodoList(updatedTodoList);
+    };
+
     useEffect(() => {
         axios.get("/api/todo").then((response) => {
             setTodoList(response.data.todos);
@@ -105,9 +117,13 @@ export default function Welcome() {
                         todoList.map((todo, index) => (
                             <ListItem
                                 key={`${todo}-${index}`}
+                                index={index}
                                 todo={todo}
                                 destroyTodo={destroyTodo}
                                 updateTodo={updateTodo}
+                                handleDragEnter={handleDragEnter}
+                                draggedItem={draggedItem}
+                                setDraggedItem={setDraggedItem}
                             />
                         ))
                     )}

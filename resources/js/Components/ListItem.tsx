@@ -1,21 +1,29 @@
 import { Todo } from "@/Pages/Home";
-import { IconButton, Typography } from "@mui/material";
-import { blue, red } from "@mui/material/colors";
+import { Box, IconButton, Typography } from "@mui/material";
+import { blue, cyan, red } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import ListItemWrapper from "./ListItemWrapper";
 import Form from "./Form";
 
 interface ListItemInterface {
+    index: number;
     todo: Todo;
     destroyTodo: (id: number) => void;
     updateTodo: (id: number, description: string, status: boolean) => void;
+    handleDragEnter: (e: SyntheticEvent, index: number) => void;
+    draggedItem: Todo | null;
+    setDraggedItem: Dispatch<SetStateAction<Todo | null>>;
 }
 
 export default function ListItem({
+    index,
     todo,
     destroyTodo,
     updateTodo,
+    handleDragEnter,
+    draggedItem,
+    setDraggedItem,
 }: ListItemInterface) {
     const [isEditing, setIsEditing] = useState(false);
 
@@ -25,7 +33,30 @@ export default function ListItem({
     };
 
     return (
-        <>
+        <Box
+            draggable
+            onDragStart={() => {
+                setIsEditing(false);
+                setDraggedItem(todo);
+            }}
+            onDragEnd={() => setDraggedItem(null)}
+            onDragEnter={(e) => handleDragEnter(e, index)}
+            sx={[
+                {
+                    transition: "background-color 0.3s",
+                    cursor: "pointer",
+                    transform: "none",
+                },
+                draggedItem === todo
+                    ? {
+                          backgroundColor: cyan["300"],
+                          color: "#fff",
+                          cursor: "grab",
+                          transform: "scale(1.01)",
+                      }
+                    : {},
+            ]}
+        >
             {isEditing ? (
                 <Form
                     todo={todo}
@@ -64,6 +95,6 @@ export default function ListItem({
                     </IconButton>
                 </ListItemWrapper>
             )}
-        </>
+        </Box>
     );
 }
