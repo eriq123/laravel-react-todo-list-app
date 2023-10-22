@@ -11,7 +11,7 @@ class TodoController extends Controller
     public function all()
     {
         return response()->json([
-            'todos' => Todo::all()
+            'todos' => Todo::orderByDesc('updated_at')->get()
         ]);
     }
 
