@@ -17,11 +17,10 @@ class TodoController extends Controller
 
     public function create(Request $request)
     {
-        $todo = Todo::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->status,
-        ]);
+        $todo = new Todo();
+        $todo->description = $request->description;
+        $todo->status = $request->status;
+        $todo->save();
 
         return response()->json([
             'todo' => $todo
@@ -30,12 +29,10 @@ class TodoController extends Controller
 
     public function update(Request $request)
     {
-        $todo = Todo::find($request->id)
-            ->update([
-                'name' => $request->name,
-                'description' => $request->description,
-                'status' => $request->status,
-            ]);
+        $todo = Todo::find($request->id);
+        $todo->description = $request->description;
+        $todo->status = $request->status;
+        $todo->save();
 
         return response()->json([
             'todo' => $todo

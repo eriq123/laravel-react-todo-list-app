@@ -9,9 +9,14 @@ import { ChangeEvent, useEffect, useState, useRef } from "react";
 interface ListItemInterface {
     todo: Todo;
     destroyTodo: (id: number) => void;
+    updateTodo: (id: number, description: string, status: boolean) => void;
 }
 
-export default function ListItem({ todo, destroyTodo }: ListItemInterface) {
+export default function ListItem({
+    todo,
+    destroyTodo,
+    updateTodo,
+}: ListItemInterface) {
     const [isEditing, setIsEditing] = useState(false);
     const [description, setDescription] = useState("");
 
@@ -25,6 +30,11 @@ export default function ListItem({ todo, destroyTodo }: ListItemInterface) {
     useEffect(() => {
         setTextFieldHeight(descriptionRef?.current?.clientHeight ?? "auto");
     }, []);
+
+    const saveChanges = async () => {
+        await updateTodo(todo.id, description, todo.status);
+        setIsEditing(false);
+    };
 
     return (
         <Stack
@@ -46,7 +56,7 @@ export default function ListItem({ todo, destroyTodo }: ListItemInterface) {
                         sx={{ ml: 2.5, mr: 1, my: 3, height: textFieldHeight }}
                     />
                     <IconButton
-                        onClick={() => setIsEditing(false)}
+                        onClick={saveChanges}
                         sx={{
                             color: green["800"],
                             "&:hover": {

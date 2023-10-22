@@ -34,6 +34,25 @@ export default function Welcome() {
         });
     };
 
+    const updateTodo = async (
+        id: number,
+        description: string,
+        status: boolean
+    ) => {
+        return await axios
+            .post("/api/todo/update", { id, description, status })
+            .then((response) => {
+                const updatedTodoList = todoList.map((todo) => {
+                    if (todo.id === response.data.todo.id) {
+                        todo.description = response.data.todo.description;
+                        todo.status = response.data.todo.status;
+                    }
+                    return todo;
+                });
+                setTodoList(updatedTodoList);
+            });
+    };
+
     return (
         <>
             <Head title="Welcome" />
@@ -53,6 +72,7 @@ export default function Welcome() {
                                 key={`${todo}-${index}`}
                                 todo={todo}
                                 destroyTodo={destroyTodo}
+                                updateTodo={updateTodo}
                             />
                         ))
                     )}
