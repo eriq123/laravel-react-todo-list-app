@@ -8,6 +8,6 @@ Simple todo list application using react and mui as frontend.
 -   `cp .env.example .env`
 -   `composer install`
 -   `php artisan key:generate`
--   Setup database and update .env
+-   Setup database and update .env `DB_*` config
 -   `php artisan migrate --seed`
 -   In a separate terminal `php artisan serve`
