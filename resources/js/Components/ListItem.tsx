@@ -1,10 +1,10 @@
 import { Todo } from "@/Pages/Home";
-import { IconButton, Input, Stack, TextField, Typography } from "@mui/material";
-import { red, grey, green } from "@mui/material/colors";
+import { IconButton, Typography } from "@mui/material";
+import { red } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CloseIcon from "@mui/icons-material/Close";
-import CheckIcon from "@mui/icons-material/Check";
-import { ChangeEvent, useEffect, useState, useRef } from "react";
+import { useState } from "react";
+import ListItemWrapper from "./ListItemWrapper";
+import Form from "./Form";
 
 interface ListItemInterface {
     todo: Todo;
@@ -18,71 +18,24 @@ export default function ListItem({
     updateTodo,
 }: ListItemInterface) {
     const [isEditing, setIsEditing] = useState(false);
-    const [description, setDescription] = useState("");
 
-    const descriptionRef = useRef<HTMLDivElement>();
-    const [textFieldHeight, setTextFieldHeight] = useState<number | "auto">(0);
-
-    useEffect(() => {
-        setDescription(todo.description);
-    }, [isEditing]);
-
-    useEffect(() => {
-        setTextFieldHeight(descriptionRef?.current?.clientHeight ?? "auto");
-    }, []);
-
-    const saveChanges = async () => {
+    const saveChanges = async (description: string) => {
         await updateTodo(todo.id, description, todo.status);
         setIsEditing(false);
     };
 
     return (
-        <Stack
-            sx={{ border: `1px solid #eee`, boxSizing: "border-box" }}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-        >
+        <>
             {isEditing ? (
-                <>
-                    <Input
-                        fullWidth
-                        autoFocus
-                        multiline
-                        value={description}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            setDescription(e.target.value)
-                        }
-                        sx={{ ml: 2.5, mr: 1, my: 3, height: textFieldHeight }}
-                    />
-                    <IconButton
-                        onClick={saveChanges}
-                        sx={{
-                            color: green["800"],
-                            "&:hover": {
-                                color: green["600"],
-                            },
-                        }}
-                    >
-                        <CheckIcon />
-                    </IconButton>
-                    <IconButton
-                        onClick={() => setIsEditing(false)}
-                        sx={{
-                            mr: 1.5,
-                            color: grey["800"],
-                            "&:hover": {
-                                color: grey["600"],
-                            },
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </>
+                <Form
+                    todo={todo}
+                    show={isEditing}
+                    save={saveChanges}
+                    close={() => setIsEditing(false)}
+                />
             ) : (
-                <>
+                <ListItemWrapper>
                     <Typography
-                        ref={descriptionRef}
                         variant="body1"
                         component="div"
                         flexGrow={1}
@@ -108,8 +61,8 @@ export default function ListItem({
                     >
                         <DeleteIcon />
                     </IconButton>
-                </>
+                </ListItemWrapper>
             )}
-        </Stack>
+        </>
     );
 }

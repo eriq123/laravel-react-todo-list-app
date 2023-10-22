@@ -1,7 +1,6 @@
 import { Head } from "@inertiajs/react";
 import { PageProps } from "@/types";
 import {
-    Card,
     Container,
     Typography,
     Divider,
@@ -9,19 +8,23 @@ import {
     Button,
     Alert,
 } from "@mui/material";
-import { green } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ListItem from "@/Components/ListItem";
 import AddIcon from "@mui/icons-material/Add";
-export interface Todo {
+import Form from "@/Components/Form";
+export interface Todo extends TodoContent {
     id: number;
+}
+
+interface TodoContent {
     description: string;
     status: boolean;
 }
 
 export default function Welcome() {
     const [todoList, setTodoList] = useState<Todo[]>([]);
+    const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
         axios.get("/api/todo").then((response) => {
@@ -54,6 +57,18 @@ export default function Welcome() {
             });
     };
 
+    const saveTodo = (description: string) => {
+        axios
+            .post("/api/todo/create", { description, status: false })
+            .then((response) => {
+                setTodoList((previousTodoList) => [
+                    response.data.todo,
+                    ...previousTodoList,
+                ]);
+                setIsAdding(false);
+            });
+    };
+
     return (
         <>
             <Head title="Welcome" />
@@ -65,10 +80,19 @@ export default function Welcome() {
                         color="success"
                         startIcon={<AddIcon />}
                     >
-                        <Typography>Add todo</Typography>
+                        <Typography onClick={() => setIsAdding(true)}>
+                            Add todo
+                        </Typography>
                     </Button>
                 </Stack>
-                <Divider sx={{ py: 1 }} />
+
+                <Divider sx={{ my: 1 }} />
+
+                <Form
+                    save={saveTodo}
+                    close={() => setIsAdding(false)}
+                    show={isAdding}
+                />
 
                 <Stack sx={{ py: 2 }} gap={1.5}>
                     {todoList.length === 0 ? (
