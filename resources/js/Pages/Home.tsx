@@ -15,6 +15,7 @@ import axios from "axios";
 import ListItem from "@/Components/ListItem";
 
 interface Todo {
+    id: number;
     description: string;
     status: boolean;
 }
@@ -26,6 +27,12 @@ export default function Welcome() {
             setTodoList(response.data.todos);
         });
     }, []);
+
+    const destroyTodo = (id: number) => {
+        axios.post("/api/todo/destroy", { id }).then(() => {
+            setTodoList(todoList.filter((todo) => todo.id !== id));
+        });
+    };
 
     return (
         <>
@@ -49,6 +56,7 @@ export default function Welcome() {
                                     {todo.description}
                                 </Typography>
                                 <IconButton
+                                    onClick={() => destroyTodo(todo.id)}
                                     sx={{
                                         color: red["800"],
                                         "&:hover": {
