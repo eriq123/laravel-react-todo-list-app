@@ -1,6 +1,6 @@
 import { Todo } from "@/Pages/Home";
 import { IconButton, Typography } from "@mui/material";
-import { red } from "@mui/material/colors";
+import { blue, red } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import ListItemWrapper from "./ListItemWrapper";
@@ -32,6 +32,7 @@ export default function ListItem({
                     show={isEditing}
                     save={saveChanges}
                     close={() => setIsEditing(false)}
+                    sx={{ background: blue["50"] }}
                 />
             ) : (
                 <ListItemWrapper>

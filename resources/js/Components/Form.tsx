@@ -1,5 +1,5 @@
 import { Todo } from "@/Pages/Home";
-import { IconButton, Input } from "@mui/material";
+import { IconButton, Input, SxProps } from "@mui/material";
 import { grey, green } from "@mui/material/colors";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
@@ -11,9 +11,10 @@ interface FormInterface {
     show: boolean;
     save: (description: string) => void;
     close: () => void;
+    sx?: SxProps;
 }
 
-export default function Form({ todo, save, close, show }: FormInterface) {
+export default function Form({ todo, save, close, show, sx }: FormInterface) {
     const [description, setDescription] = useState("");
 
     useEffect(() => {
@@ -22,7 +23,7 @@ export default function Form({ todo, save, close, show }: FormInterface) {
 
     return (
         show && (
-            <ListItemWrapper>
+            <ListItemWrapper sx={sx}>
                 <Input
                     fullWidth
                     autoFocus

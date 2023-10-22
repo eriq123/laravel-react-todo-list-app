@@ -13,6 +13,7 @@ import axios from "axios";
 import ListItem from "@/Components/ListItem";
 import AddIcon from "@mui/icons-material/Add";
 import Form from "@/Components/Form";
+import { green } from "@mui/material/colors";
 export interface Todo extends TodoContent {
     id: number;
 }
@@ -71,7 +72,7 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="Welcome" />
+            <Head title="Home" />
             <Container>
                 <Stack alignItems="center">
                     <Typography variant="h1">Todo list</Typography>
@@ -92,6 +93,7 @@ export default function Welcome() {
                     save={saveTodo}
                     close={() => setIsAdding(false)}
                     show={isAdding}
+                    sx={{ background: green["50"] }}
                 />
 
                 <Stack sx={{ py: 2 }} gap={1.5}>
