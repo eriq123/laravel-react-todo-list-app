@@ -6,13 +6,14 @@ import {
     Typography,
     Divider,
     Stack,
-    IconButton,
+    Button,
     Alert,
 } from "@mui/material";
+import { green } from "@mui/material/colors";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ListItem from "@/Components/ListItem";
-
+import AddIcon from "@mui/icons-material/Add";
 export interface Todo {
     id: number;
     description: string;
@@ -57,10 +58,18 @@ export default function Welcome() {
         <>
             <Head title="Welcome" />
             <Container>
-                <Typography variant="h1" sx={{ textAlign: "center" }}>
-                    Todo list{" "}
-                </Typography>
-                <Divider />
+                <Stack alignItems="center">
+                    <Typography variant="h1">Todo list</Typography>
+                    <Button
+                        variant="outlined"
+                        color="success"
+                        startIcon={<AddIcon />}
+                    >
+                        <Typography>Add todo</Typography>
+                    </Button>
+                </Stack>
+                <Divider sx={{ py: 1 }} />
+
                 <Stack sx={{ py: 2 }} gap={1.5}>
                     {todoList.length === 0 ? (
                         <Alert severity="info">
