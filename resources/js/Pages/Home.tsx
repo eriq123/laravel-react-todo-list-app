@@ -21,6 +21,7 @@ export interface Todo extends TodoContent {
 interface TodoContent {
     description: string;
     status: boolean;
+    order: number;
 }
 
 export default function Welcome() {
@@ -39,6 +40,13 @@ export default function Welcome() {
         setTodoList(updatedTodoList);
     };
 
+    const handleDragEnd = () => {
+        const todoIds = todoList.map((todo) => todo.id).reverse();
+        axios.post("/api/todo/save-order", { todoIds }).then(() => {
+            setDraggedItem(null);
+        });
+    };
+
     useEffect(() => {
         axios.get("/api/todo").then((response) => {
             setTodoList(response.data.todos);
@@ -54,10 +62,11 @@ export default function Welcome() {
     const updateTodo = async (
         id: number,
         description: string,
-        status: boolean
+        status: boolean,
+        order: number
     ) => {
         return await axios
-            .post("/api/todo/update", { id, description, status })
+            .post("/api/todo/update", { id, description, status, order })
             .then((response) => {
                 const updatedTodoList = todoList.map((todo) => {
                     if (todo.id === response.data.todo.id) {
@@ -121,9 +130,10 @@ export default function Welcome() {
                                 todo={todo}
                                 destroyTodo={destroyTodo}
                                 updateTodo={updateTodo}
-                                handleDragEnter={handleDragEnter}
                                 draggedItem={draggedItem}
                                 setDraggedItem={setDraggedItem}
+                                handleDragEnter={handleDragEnter}
+                                handleDragEnd={handleDragEnd}
                             />
                         ))
                     )}

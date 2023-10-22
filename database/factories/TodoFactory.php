@@ -19,6 +19,7 @@ class TodoFactory extends Factory
         return [
             'description' => fake()->text(),
             'status' => false,
+            'order' => 0
         ];
     }
 }

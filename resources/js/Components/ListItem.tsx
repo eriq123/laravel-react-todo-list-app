@@ -10,10 +10,16 @@ interface ListItemInterface {
     index: number;
     todo: Todo;
     destroyTodo: (id: number) => void;
-    updateTodo: (id: number, description: string, status: boolean) => void;
-    handleDragEnter: (e: SyntheticEvent, index: number) => void;
+    updateTodo: (
+        id: number,
+        description: string,
+        status: boolean,
+        order: number
+    ) => void;
     draggedItem: Todo | null;
     setDraggedItem: Dispatch<SetStateAction<Todo | null>>;
+    handleDragEnter: (e: SyntheticEvent, index: number) => void;
+    handleDragEnd: () => void;
 }
 
 export default function ListItem({
@@ -21,14 +27,15 @@ export default function ListItem({
     todo,
     destroyTodo,
     updateTodo,
-    handleDragEnter,
     draggedItem,
     setDraggedItem,
+    handleDragEnter,
+    handleDragEnd,
 }: ListItemInterface) {
     const [isEditing, setIsEditing] = useState(false);
 
     const saveChanges = async (description: string) => {
-        await updateTodo(todo.id, description, todo.status);
+        await updateTodo(todo.id, description, todo.status, todo.order);
         setIsEditing(false);
     };
 
@@ -39,7 +46,7 @@ export default function ListItem({
                 setIsEditing(false);
                 setDraggedItem(todo);
             }}
-            onDragEnd={() => setDraggedItem(null)}
+            onDragEnd={handleDragEnd}
             onDragEnter={(e) => handleDragEnter(e, index)}
             sx={[
                 {

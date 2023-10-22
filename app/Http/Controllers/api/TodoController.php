@@ -11,19 +11,21 @@ class TodoController extends Controller
     public function all()
     {
         return response()->json([
-            'todos' => Todo::orderByDesc('updated_at')->get()
+            'todos' => Todo::orderByDesc('order')->get()
         ]);
     }
 
     public function create(Request $request)
     {
+        $lastTodo = Todo::orderByDesc('order')->first();
         $todo = new Todo();
         $todo->description = $request->description;
         $todo->status = $request->status;
+        $todo->order = isset($lastTodo->order) ? $lastTodo->order + 1 : 1;
         $todo->save();
 
         return response()->json([
-            'todo' => $todo
+            'todo' => $todo,
         ]);
     }
 
@@ -32,6 +34,7 @@ class TodoController extends Controller
         $todo = Todo::find($request->id);
         $todo->description = $request->description;
         $todo->status = $request->status;
+        $todo->order = $request->order;
         $todo->save();
 
         return response()->json([
@@ -46,5 +49,18 @@ class TodoController extends Controller
         return response()->json([
             'todo' => $todo
         ]);
+    }
+
+    public function saveOrder(Request $request)
+    {
+        $todoIds = $request->todoIds;
+
+        foreach ($todoIds as $index => $todoId) {
+            $todo = Todo::find($todoId);
+            $todo->order = $index + 1;
+            $todo->save();
+        }
+
+        return response()->json([], 200);
     }
 }

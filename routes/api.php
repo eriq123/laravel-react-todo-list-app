@@ -24,4 +24,5 @@ Route::controller(TodoController::class)->prefix('todo')->group(function () {
     Route::post('/create', 'create');
     Route::post('/update', 'update');
     Route::post('/destroy', 'destroy');
+    Route::post('/save-order', 'saveOrder');
 });

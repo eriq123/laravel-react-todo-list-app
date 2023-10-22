@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Todo;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,7 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Todo::factory(10)->create();
+        foreach (range(1, 10) as $iteration) {
+            Todo::factory()->create([
+                'order' => $iteration,
+            ]);
+        }
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
