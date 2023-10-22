@@ -41,10 +41,17 @@ export default function Welcome() {
     };
 
     const handleDragEnd = () => {
-        const todoIds = todoList.map((todo) => todo.id).reverse();
-        axios.post("/api/todo/save-order", { todoIds }).then(() => {
-            setDraggedItem(null);
-        });
+        if (draggedItem) {
+            const draggedIndex = todoList.indexOf(draggedItem);
+            if (draggedIndex !== 0) {
+                const todoIds = todoList.map((todo) => todo.id).reverse();
+                axios.post("/api/todo/save-order", { todoIds }).then(() => {
+                    setDraggedItem(null);
+                });
+            } else {
+                setDraggedItem(null);
+            }
+        }
     };
 
     useEffect(() => {
