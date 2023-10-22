@@ -7,18 +7,18 @@ import {
     Divider,
     Stack,
     IconButton,
+    Alert,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { red } from "@mui/material/colors";
 import axios from "axios";
 import ListItem from "@/Components/ListItem";
 
-interface Todo {
+export interface Todo {
     id: number;
     description: string;
     status: boolean;
 }
+
 export default function Welcome() {
     const [todoList, setTodoList] = useState<Todo[]>([]);
 
@@ -44,29 +44,16 @@ export default function Welcome() {
                 <Divider />
                 <Stack sx={{ py: 2 }} gap={1.5}>
                     {todoList.length === 0 ? (
-                        <ListItem>
-                            <Typography>
-                                You don't have anything todo for today.
-                            </Typography>
-                        </ListItem>
+                        <Alert severity="info">
+                            You don't have anything todo for today.
+                        </Alert>
                     ) : (
                         todoList.map((todo, index) => (
-                            <ListItem key={`${todo}-${index}`}>
-                                <Typography variant="body1" sx={{ px: 1.5 }}>
-                                    {todo.description}
-                                </Typography>
-                                <IconButton
-                                    onClick={() => destroyTodo(todo.id)}
-                                    sx={{
-                                        color: red["800"],
-                                        "&:hover": {
-                                            color: red["600"],
-                                        },
-                                    }}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItem>
+                            <ListItem
+                                key={`${todo}-${index}`}
+                                todo={todo}
+                                destroyTodo={destroyTodo}
+                            />
                         ))
                     )}
                 </Stack>
